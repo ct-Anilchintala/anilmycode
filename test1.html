@@ -1,0 +1,366 @@
+<html>
+    <head>
+        <script src="vue.js" ></script>
+        <script src="axios.min.js" ></script>
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+        <script src="bootstrap/js/bootstrap.min.js" ></script>
+    </head>
+    <body>
+        <div id="app" >
+            <div>{{ message }}</div>
+            <table border="1" class="table table-bordered table-striped">
+                <tr> 
+                    <th>STATE</th>
+                    <th>CITY</th>
+                    <th>AREA</th>
+                </tr>
+                <tr>
+                    <td>
+                        <div><a href="#" v-on:click="show_form=true" >Show Add State Form</a></div>
+                        <div v-if="show_form">
+                            State<input type="text" v-model="new_state['state']" placeholder="New State" >
+                            Capital: <input type="text" v-model="new_state['capital']" placeholder="New capital" >
+                            CM: <input type="text" v-model="new_state['cm']" placeholder="New cm" >
+                            <input type="button" value="Add State" v-on:click="add_state">
+                        </div>
+                        <!-- <pre>{{ new_state }}</pre> -->
+                        <div v-if="show_edit_state_form">
+                            State<input type="text" v-model="edit_state['state']">
+                            Capital: <input type="text" v-model="edit_state['capital']" >
+                            CM: <input type="text" v-model="edit_state['cm']" >
+                            <input type="button" value="Edit State" v-on:click="do_edit_state">
+                        </div>
+                        <table border="1" class="table table-bordered table-striped">
+                            <tr>
+                                <th>state</th>
+                                <th>capital</th>
+                                <th>cm</th>
+                                <th>delete</th>
+                                <th>edit</th>
+                            </tr>
+                            <tr v-for="v,i in states" >
+                                <td>{{ v['state'] }}</td>
+                                <td>{{ v['capital'] }}</td>
+                                <td>{{ v['cm'] }}</td>
+                                <td><input type="button" value="X" v-on:click="delete_state(i)"></td>
+                                <td><input type="button" value="E" v-on:click="edit_state1(i),show_edit_state_form=true"></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <div><a href="#" v-on:click="show_city_form=true" >Show Add City Form</a></div>
+                        <div v-if="show_city_form">
+                            <!-- State: <input type="text" v-model="new_city['state']" placeholder="New State" > -->
+                            <select v-model="new_city['state']">
+                                <option value="">Select State</option>
+                                <option v-for="option in states_list" :value="option['state']">{{ option['state'] }}</option>
+                            </select>
+                            City: <input type="text" v-model="new_city['city']" placeholder="New city" >
+                            MLA: <input type="text" v-model="new_city['mla']" placeholder="New mla" >
+                            Population: <input type="number" v-model="new_city['population']" placeholder="population" >
+                            <input type="button" value="Add City" v-on:click="add_city" >
+                        </div>
+                        <div v-if="show_edit_city_form">
+                            <select v-model="edit_city['state']">
+                                <option value="">Select State</option>
+                                <option v-for="option in states_list" :value="option['state']">{{ option['state'] }}</option>
+                            </select>
+                            City: <input type="text" v-model="edit_city['city']"  >
+                            MLA: <input type="text" v-model="edit_city['mla']" >
+                            Population: <input type="number" v-model="edit_city['population']"  >
+                            <input type="button" value="edit_city" v-on:click="do_edit_city">
+                        </div>
+                        <!-- <pre>{{ new_city }}</pre> -->
+                        <table border="1" class="table table-bordered table-striped" >
+                            <tr>
+                                <th>state</th>
+                                <th>city</th>
+                                <th>mla</th>
+                                <th>population</th>
+                                <th>delete</th>
+                                <th>edit</th>
+                            </tr>
+                            <tr v-for="v,i in cities" >
+                                <td>{{ v['state'] }}</td>
+                                <td>{{ v['city'] }}</td>
+                                <td>{{ v['mla'] }}</td>
+                                <td>{{ v['population'] }}</td>
+                                <td><input type="button" value="X" v-on:click="delete_city(i)"></td>
+                                <td><input type="button" value="E" v-on:click="edit_city1(i),show_edit_city_form=true"></td>
+                            </tr>
+                        </table>
+                        <!-- <pre>{{ cities }}</pre> -->
+                    </td>
+                    <td>
+                        <div><a href="#" v-on:click="show_area_form=true" >Show Add Area Form</a></div>
+                        <div v-if="show_area_form">
+                            <select v-model="new_area['state']">
+                                <option value="">Select State</option>
+                                <option v-for="option in states_list" :value="option['state']">{{ option['state'] }}</option>
+                            </select>
+                            <select v-model="new_area['city']">
+                                <option value="">Select city</option>
+                                <option v-for="option in cities_list" :value="option['city']">{{ option['city'] }}</option>
+                            </select>
+                            Area: <input type="text" v-model="new_area['area']" placeholder="New area" >
+                            Pincode: <input type="number" v-model="new_area['pincode']" placeholder="pincode" >
+                            <input type="button" value="Add Area" v-on:click="add_area" >
+                        </div>
+                        <div v-if="show_edit_area_form">
+                            <select v-model="edit_area['state']">
+                                <option value="">Select State</option>
+                                <option v-for="option in states_list" :value="option['state']">{{ option['state'] }}</option>
+                            </select>
+                            <select v-model="edit_area['city']">
+                                <option value="">Select city</option>
+                                <option v-for="option in cities_list" :value="option['city']">{{ option['city'] }}</option>
+                            </select>
+                            Area: <input type="text" v-model="edit_area['area']" >
+                            Pincode: <input type="number" v-model="edit_area['pincode']"  >
+                            <input type="button" value="Edit Area" v-on:click="do_edit_area" >
+                        </div>
+                        <!-- <pre>{{ new_area }}</pre> -->
+                        <table border="1" class="table table-bordered table-striped" >
+                            <tr>
+                                <th>state</th>
+                                <th>city</th>
+                                <th>area</th>
+                                <th>pincode</th>
+                                <th>delete</th>
+                                <th>edit</th>
+                            </tr>
+                            <tr v-for="v,i in areas" >
+                                <td>{{ v['state'] }}</td>
+                                <td>{{ v['city'] }}</td>
+                                <td>{{ v['area'] }}</td>
+                                <td>{{ v['pincode'] }}</td>
+                                <td><input type="button" value="X" v-on:click="delete_area(i)"></td>
+                                <td><input type="button" value="E" v-on:click="edit_area1(i),show_edit_area_form=true"></td>
+                            </tr>
+                        </table>
+                        <!-- <pre>{{ cities }}</pre> -->
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            var app = Vue.createApp({
+                //el: "#app",
+                data: function(){
+                    return {
+                        "message": "Yes ok.",
+                        "states": [
+                            
+                        ],
+                        "cities": [
+                          
+                        ],
+                        "areas":[
+
+                        ],
+                        new_state: {
+                            "state": "",
+                            "capital": "",
+                            "cm": "",
+                        },
+                        new_city: {
+                            "state": "",
+                            "city": "",
+                            "population": 0,
+                            "mla": ""
+                        },
+                        new_area: {
+                            "state":"",
+                            "city":"",
+                            "area":"",
+                            "pincode": 0
+                        },
+                        show_form: false,
+                        show_city_form: false,
+                        show_edit_state_form: false,
+                        show_edit_city_form:false,
+                        show_area_form: false,
+                        show_edit_area_form:false,
+                    };
+                },
+                mounted: function(){
+                    this.load_cities();
+                    this.load_states();
+                    this.load_areas();
+                    this.load_states_list();
+                    this.load_cities_list();
+                },
+                created: function(){
+
+                },
+                methods: {
+                    add_state: function(){
+                        axios.post("api.php", {
+                            "action": "add_state",
+                            "data": JSON.stringify(this.new_state)
+                        },{
+                            'headers': {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        }).then(response=>{
+                            var c=this.new_state;
+                            this.states.push( c );
+                            this.new_state = '';
+                        })
+                    },
+                    load_states: function(){
+                        // promises 
+                        axios.get("api.php?action=load_states").then(response=>{
+                            console.log( response.status );
+                            console.log( response.data );
+                            this.states = response.data['states'];
+                        });
+                    },
+                    delete_state: function(vi){
+                        var state_id=this.states[vi]['id'];
+                        axios.get("api.php?action=delete_state&id="+state_id).then(response=>{
+                            console.log(response.status);
+                            console.log(response.data);
+                            console.log(state_id);
+                            this.load_states();
+                        });
+                    },
+                    load_states_list: function(){
+                        axios.get("api.php?action=load_states_list").then(response=>{
+                            console.log( response.status );
+                            console.log( response.data );
+                            this.states_list = response.data['states_list'];
+                        });
+                    },
+                    edit_state1:function(data){
+                        this.edit_state=this.states[data];
+                        state_edit_id = this.states[ data ]['id'];
+                    },
+                    do_edit_state:function(){
+                        this.show_edit_state_form=false;
+                        axios.post("api.php", {
+                            "action": "update_state",
+                            "data": JSON.stringify(this.edit_state),
+                            "id":state_edit_id
+                        },{
+                            'headers': {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        }).then(response=>{
+                            this.load_states();
+                            this.exit;
+                        })
+                    },
+                    load_cities: function(){
+                        // promises 
+                        axios.get("api.php?action=load_cities").then(response=>{
+                            console.log( response.status );
+                            console.log( response.data );
+                            this.cities = response.data['cities'];
+                        });
+                    },
+                    add_city: function(){
+                        axios.post("api.php", {
+                            "action": "add_city",
+                            "data": JSON.stringify(this.new_city)
+                        },{
+                            'headers': {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        }).then(response=>{
+                            var c=this.new_city;
+                            this.cities.push( c );
+                            this.new_city = '';
+                        })
+                    },
+                    delete_city: function(vi){
+                        var city_id=this.cities[vi]['id'];
+                        axios.get("api.php?action=delete_city&id="+city_id).then(response=>{
+                            console.log(response.status);
+                            console.log(response.data);
+                            console.log(city_id);
+                            this.load_cities();
+                        });
+                    },
+                    edit_city1:function(data){
+                        this.edit_city=this.cities[data];
+                        city_edit_id = this.cities[ data ]['id'];
+                    },
+                    do_edit_city:function(){
+                        this.show_edit_city_form=false;
+                        axios.post("api.php", {
+                            "action": "update_city",
+                            "data": JSON.stringify(this.edit_city),
+                            "id":city_edit_id
+                        },{
+                            'headers': {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        }).then(response=>{
+                            this.load_cities();
+                            this.exit;
+                        })
+                    },
+                    load_cities_list: function(){
+                        axios.get("api.php?action=load_cities_list").then(response=>{
+                            console.log( response.status );
+                            console.log( response.data );
+                            this.cities_list = response.data['cities_list'];
+                        });
+                    },
+                    add_area: function(){
+                        axios.post("api.php", {
+                            "action": "add_area",
+                            "data": JSON.stringify(this.new_area)
+                        },{
+                            'headers': {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        }).then(response=>{
+                            var c=this.new_area;
+                            this.areas.push( c );
+                            this.new_area = '';
+                        })
+                    },
+                    load_areas: function(){
+                        // promises 
+                        axios.get("api.php?action=load_areas").then(response=>{
+                            console.log( response.status );
+                            console.log( response.data );
+                            this.areas = response.data['areas'];
+                        });
+                    },
+                    delete_area: function(vi){
+                        var area_id=this.areas[vi]['id'];
+                        axios.get("api.php?action=delete_area&id="+area_id).then(response=>{
+                            console.log(response.status);
+                            console.log(response.data);
+                            console.log(area_id);
+                            this.load_areas();
+                        });
+                    },
+                    edit_area1:function(data){
+                        this.edit_area=this.areas[data];
+                        area_edit_id = this.areas[ data ]['id'];
+                    },
+                    do_edit_area:function(){
+                        this.show_edit_area_form=false;
+                        axios.post("api.php", {
+                            "action": "update_area",
+                            "data": JSON.stringify(this.edit_area),
+                            "id":area_edit_id
+                        },{
+                            'headers': {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        }).then(response=>{
+                            this.load_areas();
+                            this.exit;
+                        })
+                    },
+                }
+            }).mount("#app");
+        </script>
+
+    </body>
+</html>

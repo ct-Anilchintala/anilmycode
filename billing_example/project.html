@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="vue.js" ></script>
+    <script src="axios.min.js" ></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+</head>
+<body>
+    <div id="app">
+        <!-- <div>{{ generate_form }}</div> -->
+        
+        <div class="container">
+            <div v-for="v,i in data">
+            <b><span style="font-size:25px; color:red; float:left;">{{ v.group }}</span>
+            <div style="font-size:25px; color:red; text-align:right;">COST:₹0</div></b>
+            <div v-for="k,j in data[i].categories">
+                <label><button class="btn btn-primary" :name="btn" :id="k.id" value="ctgry" type="button" style="width:60vw; text-align:left;" v-model="category[k.id]" v-on:click="show_items=true">{{k.name}}
+                <span class="caret" style="text-align:right;"></span></button></label>
+                <div v-if="show_items">
+                <table class="table">
+                    <tr>
+                        <th></th>
+                        <th>Item</th>
+                        <th></th>
+                        <th>Options</th>
+                        <th>RF cost</th>
+                        <th>Remarks</th>
+                    </tr>
+                    <tr v-if="k.name!='Accidental Details'" v-for="p,m in k.items">
+                        <td>{{m+1}}</td>
+                        <td>{{p.name}}</td>
+                        <td><label><input type="radio" value="ok" :name="p.name" :id="p.name" v-model="status[p.partid]" >Ok</label>&nbsp;
+                            <label><input type="radio" value="Not ok" :name="p.name" :id="p.name" v-model="status[p.partid]" >Not Ok</label>&nbsp;
+                        </td>
+                        <td>
+                            <span v-if="status[p.partid]=='ok'">
+                                <ul>
+                                    <p v-for="v in p.ok">
+                                        <input type="checkbox" :name="p.name" id="ok">{{v.name}}
+                                    </p>
+                                </ul>
+                            </span>
+                            <span v-if="status[p.partid]=='Not ok'">
+                                <ul>
+                                    <p v-for="b in p.notok">
+                                        <input type="checkbox" :name="p.name" id="notok">{{b.name}}
+                                    </p>
+                                </ul>
+                            </span>
+                        </td>
+                        <td>
+                            ₹<input type="number" value="0">
+                        </td>
+                        <td>
+                            <textarea name="remarks" id="remark" cols="30" rows="3" placeholder="Remarks"></textarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            </div>
+        </div>
+        </div>
+   
+        <!-- <pre>{{data}}</pre> -->
+        <!-- <pre>{{ data.length }}</pre>
+        <pre>{{name}}</pre>  -->
+        <script src="config_certification_template_v2.js"></script>
+        <script>
+            var app = Vue.createApp({
+                el: "#app",
+                data: function(){
+                    return {
+                        "message": "Yes ok.",
+                        "data":x,
+                        "status":[],
+                        "category":[],
+                        show_items:false,
+                    };
+                },
+                mounted: function(){
+                    
+                },
+                created: function(){
+                    
+                },
+                methods: {
+                }
+            }).mount("#app");
+        </script>
+    </div>
+</body>
+</html>

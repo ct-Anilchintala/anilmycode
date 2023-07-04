@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="vue.js" ></script>
+    <script src="axios.min.js" ></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    
+</head>
+<body>
+    <div id="app">
+        <!-- <div>{{ generate_form }}</div> -->
+        <!-- <div>
+            <span style="color:red; float:left;">EXTERIOR</span>
+            <div style="color:red; text-align:right;">COST:₹0</div>
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" style="width:100vw; text-align:left;">Dropdown Example
+                <span class="caret" style="text-align:right;"></span></button>
+            </div>
+        </div> -->
+   
+        <!-- <pre>{{data}}</pre> -->
+        <pre>{{ data.length }}</pre>
+        
+             <div v-for="v,i in name">
+                <span>{{i+1}}&nbsp;{{v.name}}</span>
+                <span><input type="radio" value="ok" name="choose" v-on:click="show_ok_options=true">&nbsp;
+                    <label for="choose">Ok</label>&nbsp;
+                    <span><input type="radio" value="Not ok" name="choose" v-on:click="show_not_ok_options=true">&nbsp;
+                    <label for="choose">Not Ok</label>&nbsp;
+                    </span>
+                    <span v-if="show_ok_options">
+                        <ul>
+                            <!-- <pre>{{name[i].ok.length}}</pre> -->
+                            <li v-for="k in name[i].ok">
+                                {{k.name}}
+                            </li>
+                        </ul>
+                    </span>
+                <span v-if="show_not_ok_options">
+                    <ul>
+                        <li v-for="k in name[i].notok">
+                            {{k.name}}
+                        </li>
+                    </ul>
+                </span>
+            </div> 
+          
+            <!-- <div v-for="v in name">
+                <span v-if="show_ok_options">
+                    <ul>
+                        <li v-for="k in name[i][ok]">
+                            {{k.name}}
+                        </li>
+                    </ul>
+                </span>
+            </div> -->
+
+            <!-- <table style="border:1px solid black;" v-for="v,i in name">
+                <tr>
+                    <td>{{v.name}}</td>
+                    <td><input type="radio" value="ok" name="choose" v-on:click="show_ok_options=true">&nbsp;
+                        <label for="choose">Ok</label>&nbsp;
+                        <input type="radio" value="Not ok" name="choose" v-on:click="show_not_ok_options=true">&nbsp;
+                        <label for="choose">Not Ok</label>&nbsp;
+                    </td>
+                    <td>
+                        <span v-if="show_ok_options">
+                            <ul>
+                                <li v-for="v in ok_options">
+                                    {{v.name}}
+                                </li>
+                            </ul>
+                        </span>
+                        <span v-if="show_Not_ok_options">
+                            <ul>
+                                <li v-for="v in not_ok_options">
+                                    {{v.name}}
+                                </li>
+                            </ul>
+                        </span>
+                    </td>
+                </tr>
+            </table>
+         -->
+        <!-- <pre>{{name}}</pre> -->
+       <!-- <pre>{{name}}</pre>  -->
+        <script src="config_certification_template_v2.js"></script>
+        <script>
+            var app = Vue.createApp({
+                el: "#app",
+                data: function(){
+                    return {
+                        "message": "Yes ok.",
+                        "data":x,
+                         "name":[],
+                         "ok_options":[],
+                        "not_ok_options":[],
+                        show_ok_options:false,
+                        show_not_ok_options:false,
+                    };
+                },
+                mounted: function(){
+                    this.names();
+                },
+                created: function(){
+                    
+                },
+                methods: {
+                    names: function(){
+                        this.name = this.data[0].categories[0].items;
+                    }
+                }
+            }).mount("#app");
+        </script>
+    </div>
+</body>
+</html>
